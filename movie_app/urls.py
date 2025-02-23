@@ -1,12 +1,17 @@
 from django.urls import path
-from movie_app import views
+from movie_app.views import (
+    DirectorListCreateAPIView, DirectorDetailAPIView,
+    MovieViewSet, ReviewListCreateAPIView, ReviewDetailAPIView
+)
 
 urlpatterns = [
-    path('directors/', views.directors_list_create_api_view),
-    path('directors/<int:id>/', views.director_detail_api_view),
-    path('movies/', views.movies_list_create_api_view),
-    path('movies/<int:id>/', views.movie_detail_api_view),
-    path('reviews/', views.reviews_list_create_api_view),
-    path('reviews/<int:id>/', views.review_detail_api_view),
-    path('movies/reviews/', views.movies_reviews_api_view, name='movies-reviews'),
+    path('directors/', DirectorListCreateAPIView.as_view(), name='directors-list'),
+    path('directors/<int:id>/', DirectorDetailAPIView.as_view(), name='director-detail'),
+    path('movies/', MovieViewSet.as_view(
+        {'get': 'list', 'post': 'create'}), 
+         name='movies-list'),
+    path('movies/<int:id>/', MovieViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}), 
+         name='movie-detail'),
+    path('reviews/', ReviewListCreateAPIView.as_view(), name='reviews-list'),
+    path('reviews/<int:pk>/', ReviewDetailAPIView.as_view(), name='reviews-detail'),
 ]
